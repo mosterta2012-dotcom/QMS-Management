@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QMS Management tab · prototype · Angels Resource Centres NPO</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,"Segoe UI",system-ui,-apple-system,sans-serif;color:#0E2A24;background:#F4F7F6;font-size:14px}
+button{font-family:inherit;font-size:inherit}
+.app{display:flex;min-height:100vh}
+nav{width:232px;flex:none;background:#123A31;color:#D9E7E2;padding:18px 12px;display:flex;flex-direction:column;gap:2px}
+.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 18px}
+.logo{width:34px;height:34px;border-radius:8px;background:#E8F3EF;color:#123A31;display:grid;place-items:center;font-weight:700}
+.brand b{display:block;color:#fff;font-size:13px}.brand small{font-size:11px;color:#A9C4BB}
+.nav-item{padding:10px 12px;border-radius:8px;font-size:13px;color:#D9E7E2}
+.nav-item.active{background:#1F7A65;color:#fff;font-weight:600}
+.nav-head{margin:16px 12px 6px;font-size:10.5px;letter-spacing:.08em;color:#8FB0A5}
+main{flex:1;min-width:0;padding:24px 28px 40px}
+header{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start}
+h1{margin:0 0 4px;font-size:24px}
+header p{margin:0;color:#4A5D57;max-width:640px}
+.viewas{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.viewas small{color:#4A5D57;font-size:12px}
+.group{display:flex;gap:6px;flex-wrap:wrap}
+.btn{min-height:40px;padding:8px 14px;border-radius:8px;cursor:pointer;border:1px solid #C3D2CC;background:#fff;color:#0E2A24}
+.btn.on,.btn.primary{background:#1F7A65;border-color:#1F7A65;color:#fff;font-weight:600}
+.btn.warn{border-color:#C98A8A;color:#8E2525}
+.btn:focus-visible,.tab:focus-visible{outline:3px solid #8FD3BF;outline-offset:2px}
+.banner{margin:16px 0;padding:10px 14px;border-radius:8px;background:#FFF8E6;border:1px solid #F0DDAA;color:#5C4300;font-size:13px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid #D7E2DE;overflow-x:auto}
+.tab{min-height:44px;padding:10px 14px;background:none;border:none;border-bottom:3px solid transparent;color:#4A5D57;cursor:pointer;white-space:nowrap}
+.tab[aria-selected=true]{border-bottom-color:#1F7A65;color:#0E2A24;font-weight:600}
+.body{display:flex;gap:20px;align-items:flex-start;margin-top:20px}
+section{flex:1;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{text-align:left;background:#fff;border:1px solid #DCE6E2;border-radius:10px;padding:16px;cursor:pointer}
+.card .n{display:block;font-size:28px;font-weight:700}.card .l{color:#4A5D57;font-size:13px}
+.panel{background:#fff;border:1px solid #DCE6E2;border-radius:10px;padding:16px 18px;margin-top:16px}
+.panel h2{margin:0 0 8px;font-size:15px}.panel ol{margin:0;padding-left:20px;line-height:1.7}
+.tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+input[type=search]{min-height:40px;padding:8px 12px;border:1px solid #C3D2CC;border-radius:8px;min-width:260px;font-size:14px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #DCE6E2;border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #EEF2F0;vertical-align:top}
+th{background:#F7FAF9;font-size:12px;color:#4A5D57;font-weight:600}
+.link{white-space:nowrap;background:none;border:none;color:#1F7A65;font-weight:600;cursor:pointer;padding:0;text-decoration:underline}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.task{display:flex;justify-content:space-between;gap:16px;align-items:center;background:#fff;border:1px solid #DCE6E2;border-radius:10px;padding:14px 16px;margin-bottom:10px;flex-wrap:wrap}
+.task .meta{font-size:12px;color:#4A5D57}.task .t{display:block;font-weight:600;margin:2px 0}.task .note{font-size:13px;color:#33463F}
+.lead{color:#4A5D57;margin:0 0 12px}
+.empty{background:#fff;border:1px dashed #C3D2CC;border-radius:10px;padding:18px;color:#4A5D57}
+aside{width:340px;flex:none;background:#fff;border:1px solid #DCE6E2;border-radius:10px;padding:16px;position:sticky;top:16px}
+aside .top{display:flex;justify-content:space-between;gap:8px}
+aside .code{font-size:12px;color:#4A5D57}aside .ttl{display:block;font-weight:700;margin:2px 0 8px}
+dl{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;margin:12px 0;font-size:13px}dt{color:#4A5D57}dd{margin:0}
+.box{border-top:1px solid #EEF2F0;padding-top:10px;margin-top:10px;font-size:13px}.box b{display:block;font-size:12px;color:#4A5D57;margin-bottom:4px}
+.hist{display:block;padding:3px 0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#123A31;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1}
+@media (max-width:900px){nav{display:none}.body{flex-direction:column}aside{width:100%;position:static}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav aria-label="Main menu">
+    <div class="brand"><div class="logo" aria-hidden="true">A</div><div><b>Angels Resource Centre</b><small>NPO Management System</small></div></div>
+    <span class="nav-item">Dashboard</span>
+    <span class="nav-item">Travel Management</span>
+    <span class="nav-item">Finance Management</span>
+    <span class="nav-item">Document Control</span>
+    <span class="nav-item active" aria-current="page">QMS Management</span>
+    <span class="nav-item">Programme and Impact</span>
+    <span class="nav-item">Planning</span>
+    <span class="nav-head">COMPLIANCE AND ADMIN</span>
+    <span class="nav-item">Audit Log</span>
+    <span class="nav-item">User Management</span>
+    <span class="nav-item">Projects</span>
+    <span class="nav-item">Permissions</span>
+  </nav>
+  <main>
+    <header>
+      <div>
+        <h1>QMS Management</h1>
+        <p>Write, review, approve and publish controlled documents. Approved versions publish to Document Control as read-only copies.</p>
+      </div>
+      <div class="viewas">
+        <small>Viewing as (prototype)</small>
+        <div class="group" role="group" aria-label="Viewing as" id="roles"></div>
+      </div>
+    </header>
+    <div class="banner">Prototype with sample data from the Batch 1 to 5 drafts. Approve, return and send buttons work in this page only; nothing is saved. Build pack and full specification: see the README in this repository.</div>
+    <div class="tabs" role="tablist" aria-label="QMS Management screens" id="tabs"></div>
+    <div class="body">
+      <section id="view" aria-live="polite"></section>
+      <aside id="details" aria-label="Document details" hidden></aside>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(function () {
+  'use strict';
+  var d = function (code, title, type, process, version, approveTo, status, owner, approverRole, approver, author, board) {
+    return { code: code, title: title, type: type, process: process, version: version, approveTo: approveTo, status: status,
+      owner: owner, approverRole: approverRole, approver: approver, author: author, board: !!board, review: '',
+      history: ['v' + version.replace(' draft', '') + ' draft uploaded'] };
+  };
+  var S = {
+    role: 'QMS Administrator', tab: 'overview', q: '', type: 'All', sel: null,
+    docs: [
+      d('QMS-MAN-GOV-001', 'Quality Management System Manual', 'MAN', 'QMS-01', '2.0 draft', '2.0', 'In review', 'QMS Administrator', 'CEO', 'Board resolution, uploaded by the CEO', 'QMS Administrator', true),
+      d('QMS-POL-GOV-007', 'Code of Ethics and Conduct', 'POL', 'GOV-01', '0.1', '1.0', 'Submitted', 'CEO', 'CEO', 'Board resolution, uploaded by the CEO', 'QMS Administrator', true),
+      d('QMS-POL-GOV-008', 'Anti-Fraud, Bribery and Corruption Policy', 'POL', 'GOV-02', '0.1', '1.0', 'In review', 'CEO', 'CEO', 'Board resolution, uploaded by the CEO', 'QMS Administrator', true),
+      d('QMS-POL-FIN-002', 'Travel and Subsistence Policy', 'POL', 'FIN-08 to FIN-10', '2.0 draft', '2.0', 'In review', 'Head of Finance', 'CEO', 'CEO', 'HOD'),
+      d('QMS-POL-FIN-003', 'Asset Management Policy', 'POL', 'QMS-05', '0.3', '1.0', 'Draft', 'Operations and Programme Systems Coordinator', 'CEO', 'CEO', 'QMS Administrator'),
+      d('QMS-POL-INF-003', 'Records Retention and Destruction Policy', 'POL', 'QMS-01', '0.1', '1.0', 'Submitted', 'QMS Administrator', 'CEO', 'CEO', 'QMS Administrator'),
+      d('QMS-SOP-GOV-001', 'Document Control Procedure', 'SOP', 'QMS-01', '2.0 draft', '2.0', 'In review', 'QMS Administrator', 'CEO', 'CEO', 'QMS Administrator'),
+      d('QMS-SOP-GOV-006', 'Complaints and Feedback Procedure', 'SOP', 'QMS-03', '0.1', '1.0', 'Returned', 'QMS Administrator', 'CEO', 'CEO', 'QMS Administrator'),
+      d('QMS-SOP-GOV-007', 'Client Report Quality Review Procedure', 'SOP', 'QMS-04', '0.1', '1.0', 'In review', 'QMS Administrator', 'CEO', 'CEO', 'QMS Administrator'),
+      d('QMS-SOP-FIN-008', 'Payroll Administration and Statutory Compliance Procedure', 'SOP', 'FIN-11', '0.1', '1.0', 'In review', 'Head of Finance', 'HOD', 'HOD (Head of Finance)', 'QMS Administrator'),
+      d('QMS-GUI-OPS-001', 'Staff Guide: Travel Hub', 'GUI', 'FIN-08 to FIN-10', '0.1', '1.0', 'In review', 'Operations and Programme Systems Coordinator', 'HOD', 'Head of Operations and Systems', 'QMS Administrator'),
+      d('QMS-REG-COM-001', 'Compliance Obligations Register', 'REG', 'GOV-02', '1.1 draft', '1.1', 'Submitted', 'QMS Administrator', 'CEO', 'CEO', 'QMS Administrator')
+    ]
+  };
+  var PILLS = { 'Draft': ['#EEF1F0', '#33463F'], 'Submitted': ['#E7EEF9', '#24466F'], 'In review': ['#FFF3D6', '#6B4A00'], 'Returned': ['#FCE8E8', '#8E2525'], 'Approved': ['#E3F4E8', '#1B6B3A'] };
+  var LABEL = { 'Draft': 'Draft', 'Submitted': 'Waiting for check', 'In review': 'Waiting for approval', 'Returned': 'Returned', 'Approved': 'Approved' };
+  var TYPES = { MAN: 'Manual', POL: 'Policy', SOP: 'Procedure', GUI: 'Guide', REG: 'Register' };
+  var TABS = [['overview', 'Overview'], ['documents', 'Documents'], ['approvals', 'Approvals'], ['reviews', 'Reviews due'], ['registers', 'Registers'], ['acks', 'Acknowledgements'], ['audits', 'Audits']];
+  var REGISTERS = [
+    ['QMS-REG-GOV-001', 'Master Document Register', 'QMS Administrator'],
+    ['QMS-REG-COM-001', 'Compliance Obligations Register', 'QMS Administrator'],
+    ['QMS-REG-GOV-008', 'Context and Interested Parties Register', 'CEO'],
+    ['QMS-REG-GOV-009', 'Quality Objectives and KPI Plan', 'CEO'],
+    ['QMS-REG-GOV-010', 'Internal Audit Programme and Stage 1 Readiness', 'QMS Administrator'],
+    ['QMS-REG-GOV-011', 'Risk, Incident and Corrective Action Register', 'QMS Administrator'],
+    ['QMS-REG-INF-003', 'Systems and Operator Inventory', 'Head of Operations and Systems'],
+    ['QMS-MAP-GOV-001', 'Process Map Register', 'QMS Administrator']
+  ];
+  var AUDITS = [
+    ['2027 Q1', 'Governance and leadership', 'External or trained HOD'],
+    ['2027 Q1', 'Document control and records', 'Trained HOD'],
+    ['2027 Q1', 'Finance payments and procurement', 'QMS Administrator'],
+    ['2027 Q2', 'Client reporting', 'QMS Administrator with HOD'],
+    ['2027 Q2', 'Information and privacy', 'External or trained HOD'],
+    ['2027 Q2', 'Travel', 'QMS Administrator']
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var pill = function (st) { var p = PILLS[st] || PILLS.Draft; return '<span class="pill" style="background:' + p[0] + ';color:' + p[1] + '">' + esc(LABEL[st] || st) + '</span>'; };
+  var find = function (code) { return S.docs.filter(function (x) { return x.code === code; })[0]; };
+  var nextReview = function () {
+    var t = new Date(); t.setFullYear(t.getFullYear() + 1);
+    return t.toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+  var toast = function (msg) { var t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast.h); toast.h = setTimeout(function () { t.classList.remove('show'); }, 3200); };
+  var mine = function (x) { return S.role === 'QMS Administrator' ? x.status === 'Submitted' : (x.status === 'In review' && x.approverRole === S.role); };
+
+  function act(code, kind) {
+    var x = find(code); if (!x) return;
+    if (kind === 'return') {
+      var c = window.prompt('Return ' + x.code + ': what must change? (a comment is required)');
+      if (c === null) return;
+      if (!c.trim()) { toast('A comment is required to return a document.'); return; }
+      x.status = 'Returned'; x.history.push('Returned by ' + S.role + ': ' + c.trim());
+      toast(x.code + ' returned to the owner.');
+    } else if (S.role === 'QMS Administrator') {
+      x.status = 'In review'; x.history.push('Checked and sent to ' + x.approver);
+      toast(x.code + ' sent for approval.');
+    } else {
+      if (x.board) {
+        var r = window.prompt('This document is approved by the Board. Enter the signed Board resolution number to upload it (for example BR-2026-04):');
+        if (r === null) return;
+        if (!r.trim()) { toast('The signed Board resolution is required.'); return; }
+        x.history.push('Board resolution ' + r.trim() + ' uploaded by the CEO');
+      }
+      x.status = 'Approved'; x.version = x.approveTo; x.review = nextReview();
+      x.history.push('v' + x.approveTo + ' approved by ' + S.role + ' and published to Document Control');
+      toast(x.code + ' v' + x.approveTo + ' approved and published.');
+    }
+    render();
+  }
+
+  function renderHeader() {
+    $('roles').innerHTML = ['QMS Administrator', 'HOD', 'CEO'].map(function (r) {
+      return '<button type="button" class="btn' + (r === S.role ? ' on' : '') + '" aria-pressed="' + (r === S.role) + '" data-role="' + esc(r) + '">' + esc(r) + '</button>';
+    }).join('');
+    $('tabs').innerHTML = TABS.map(function (t) {
+      return '<button type="button" role="tab" class="tab" aria-selected="' + (t[0] === S.tab) + '" data-tab="' + t[0] + '">' + t[1] + '</button>';
+    }).join('');
+  }
+
+  function renderView() {
+    var v = $('view'), h = '';
+    var tasks = S.docs.filter(mine);
+    var approved = S.docs.filter(function (x) { return x.status === 'Approved'; });
+    var acks = approved.filter(function (x) { return x.type === 'POL'; });
+    if (S.tab === 'overview') {
+      var cards = [
+        [tasks.length, S.role === 'QMS Administrator' ? 'Submitted, waiting for my check' : 'Waiting for my approval', 'approvals'],
+        [approved.length, 'Approved, with a review date', 'reviews'],
+        [acks.length, 'Policies out for acknowledgement', 'acks'],
+        [S.docs.filter(function (x) { return x.status === 'Returned'; }).length, 'Returned to the owner', 'documents']
+      ];
+      h += '<div class="cards">' + cards.map(function (c) { return '<button type="button" class="card" data-tab="' + c[2] + '"><span class="n">' + c[0] + '</span><span class="l">' + c[1] + '</span></button>'; }).join('') + '</div>';
+      h += '<div class="panel"><h2>How a document moves</h2><ol>' +
+        '<li>Owner saves a draft (version 0.x) and submits it.</li>' +
+        '<li>QMS Administrator checks the code, format and links, then sends it for approval.</li>' +
+        '<li>The approver in the approval matrix approves or returns it. No one approves their own document.</li>' +
+        '<li>On approval the version becomes the next whole number and a read-only copy publishes to Document Control.</li>' +
+        '<li>Staff are notified and acknowledge policies; the previous version moves to Obsolete.</li></ol></div>';
+    } else if (S.tab === 'documents') {
+      var ql = S.q.toLowerCase();
+      var rows = S.docs.filter(function (x) { return (S.type === 'All' || x.type === S.type) && (!ql || (x.code + ' ' + x.title + ' ' + x.process).toLowerCase().indexOf(ql) >= 0); });
+      h += '<div class="tools"><label for="q" class="sr">Search</label><input id="q" type="search" placeholder="Code, title or process" value="' + esc(S.q) + '">' +
+        '<div class="group" role="group" aria-label="Filter by type">' + ['All', 'POL', 'MAN', 'SOP', 'GUI', 'REG'].map(function (t) {
+          return '<button type="button" class="btn' + (t === S.type ? ' on' : '') + '" aria-pressed="' + (t === S.type) + '" data-type="' + t + '">' + (t === 'All' ? 'All' : TYPES[t]) + '</button>';
+        }).join('') + '</div></div>';
+      h += rows.length ? '<table><thead><tr><th>Code</th><th>Title</th><th>Process</th><th>Version</th><th>Owner</th><th>Status</th></tr></thead><tbody>' +
+        rows.map(function (x) { return '<tr><td><button type="button" class="link" data-open="' + x.code + '">' + x.code + '</button></td><td>' + esc(x.title) + '</td><td>' + esc(x.process) + '</td><td>' + esc(x.version) + '</td><td>' + esc(x.owner) + '</td><td>' + pill(x.status) + '</td></tr>'; }).join('') +
+        '</tbody></table>' : '<div class="empty">No documents match.</div>';
+    } else if (S.tab === 'approvals') {
+      h += '<p class="lead">' + (S.role === 'QMS Administrator' ? 'Submitted drafts waiting for your check before they go to the approver.' : 'Documents waiting for approval by the ' + S.role + '.') + '</p>';
+      h += tasks.length ? tasks.map(function (x) {
+        var admin = S.role === 'QMS Administrator', self = !admin && x.author === S.role;
+        var note = admin ? 'Check code, format and links, then send to ' + x.approver + '.' :
+          self ? 'You wrote this document, so approval moves to the next level (CEO).' :
+          'Approver: ' + x.approver + '. Approving publishes version ' + x.approveTo + ' to Document Control.';
+        return '<div class="task"><div><span class="meta">' + x.code + ' · ' + esc(x.process) + ' · version ' + esc(x.version) + '</span><span class="t">' + esc(x.title) + '</span><span class="note">' + esc(note) + '</span></div>' +
+          '<div class="group"><button type="button" class="btn" data-open="' + x.code + '">Open</button>' +
+          (self ? '' : '<button type="button" class="btn warn" data-return="' + x.code + '">Return</button><button type="button" class="btn primary" data-go="' + x.code + '">' + (admin ? 'Send for approval' : 'Approve') + '</button>') +
+          '</div></div>';
+      }).join('') : '<div class="empty">Nothing waiting for you.</div>';
+    } else if (S.tab === 'reviews') {
+      h += '<p class="lead">Approved documents are reviewed at least once a year. The review date is set 12 months from approval.</p>';
+      h += approved.length ? approved.map(function (x) { return '<div class="task"><div><span class="meta">' + x.code + ' · owner ' + esc(x.owner) + '</span><span class="t">' + esc(x.title) + '</span></div><span>Next review ' + esc(x.review) + '</span></div>'; }).join('') :
+        '<div class="empty">No approved documents yet. Approve one in Approvals to see its review date here.</div>';
+    } else if (S.tab === 'registers') {
+      h += '<table><thead><tr><th>Code</th><th>Register</th><th>Owner</th></tr></thead><tbody>' + REGISTERS.map(function (g) { return '<tr><td>' + g[0] + '</td><td>' + g[1] + '</td><td>' + g[2] + '</td></tr>'; }).join('') + '</tbody></table>';
+    } else if (S.tab === 'acks') {
+      h += '<p class="lead">Approved policies are sent to the staff they apply to, who acknowledge them with their Angels Microsoft account within 10 working days.</p>';
+      h += acks.length ? acks.map(function (x) { return '<div class="task"><div><span class="meta">' + x.code + ' · version ' + esc(x.version) + '</span><span class="t">' + esc(x.title) + '</span></div><span>Sent to all staff · acknowledgements open</span></div>'; }).join('') :
+        '<div class="empty">No approved policies yet. Approve a policy to send it for acknowledgement.</div>';
+    } else if (S.tab === 'audits') {
+      h += '<p class="lead">From the internal audit programme (QMS-REG-GOV-010). Findings and corrective actions are logged against each audit.</p>';
+      h += '<table><thead><tr><th>Planned</th><th>Process area</th><th>Auditor</th><th>Status</th></tr></thead><tbody>' + AUDITS.map(function (u) { return '<tr><td>' + u[0] + '</td><td>' + u[1] + '</td><td>' + u[2] + '</td><td>Planned</td></tr>'; }).join('') + '</tbody></table>';
+    }
+    v.innerHTML = h;
+    var q = $('q');
+    if (q) { q.addEventListener('input', function (e) { S.q = e.target.value; var pos = e.target.selectionStart; renderView(); var n = $('q'); n.focus(); n.setSelectionRange(pos, pos); }); }
+  }
+
+  function renderDetails() {
+    var a = $('details'), x = find(S.sel);
+    if (!x) { a.hidden = true; a.innerHTML = ''; return; }
+    var pub = x.status === 'Approved';
+    a.hidden = false;
+    a.innerHTML = '<div class="top"><div><span class="code">' + x.code + '</span><span class="ttl">' + esc(x.title) + '</span></div>' +
+      '<button type="button" class="btn" aria-label="Close details" data-close="1">×</button></div>' + pill(x.status) +
+      '<dl><dt>Type</dt><dd>' + TYPES[x.type] + '</dd><dt>Process</dt><dd>' + esc(x.process) + '</dd><dt>Version</dt><dd>' + esc(x.version) + '</dd>' +
+      '<dt>Owner</dt><dd>' + esc(x.owner) + '</dd><dt>Approver</dt><dd>' + esc(x.approver) + '</dd><dt>Next review</dt><dd>' + esc(x.review || 'Set on approval') + '</dd></dl>' +
+      '<div class="box"><b>Visible to</b>' + (pub ? 'All staff, read-only in Document Control' : 'QMS Administrator, CEO, Board Treasurer and HODs') + '</div>' +
+      '<div class="box"><b>Document Control</b>' + (pub ? 'Published as a read-only PDF with a Controlled badge' : 'Not published. Drafts stay in QMS Management.') + '</div>' +
+      '<div class="box"><b>Version history</b>' + x.history.slice().reverse().map(function (t) { return '<span class="hist">' + esc(t) + '</span>'; }).join('') + '</div>' +
+      '<div class="box"><button type="button" class="btn" data-upload="1">Upload new version</button></div>';
+  }
+
+  function render() { renderHeader(); renderView(); renderDetails(); }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.role) { S.role = b.dataset.role; render(); }
+    else if (b.dataset.tab) { S.tab = b.dataset.tab; render(); }
+    else if (b.dataset.type) { S.type = b.dataset.type; renderView(); }
+    else if (b.dataset.open) { S.sel = b.dataset.open; renderDetails(); }
+    else if (b.dataset.close) { S.sel = null; renderDetails(); }
+    else if (b.dataset.go) { act(b.dataset.go, 'go'); }
+    else if (b.dataset.return) { act(b.dataset.return, 'return'); }
+    else if (b.dataset.upload) { toast('In the live system this uploads the Word file and its PDF as a new draft (version 0.x).'); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.getAttribute('role') !== 'tab' || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+    var i = TABS.map(function (t) { return t[0]; }).indexOf(S.tab);
+    i = (i + (e.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length;
+    S.tab = TABS[i][0]; render(); document.querySelector('[data-tab="' + S.tab + '"]').focus();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
